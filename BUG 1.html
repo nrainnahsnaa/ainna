@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sistem Penilaian Markah Pelajar</title>
+</head>
+<body>
+    <h2>Sistem Pengurusan Markah Pelajar</h2>
+
+    <!-- Borang pertama: minta bilangan subjek -->
+    <form method="post">
+        Masukkan bilangan subjek: 
+        <input type="number" name="subjek" required>
+        <input type="submit" value="Mula">
+    </form>
+
+    <?php
+    // Bila pengguna tekan "Mula", papar borang markah
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST["kira"])) {
+        $subjek = $_POST["subjek"];
+        echo "<form method='post'>";
+        echo "<input type='hidden' name='subjek' value='$subjek'>";
+
+        // Guna for loop untuk hasilkan input markah
+        for ($i = 1; $i <= $subjek; $i++) {
+            echo "Markah subjek ke-$i: <input type='number' name='markah[]' required><br>";
+        }
+
+        echo "<input type='submit' name='kira' value='Kira Jumlah dan Purata'>";
+        echo "</form>";
+    }
+
+    // Bila tekan butang 'Kira Jumlah dan Purata'
+    if (isset($_POST["kira"])) {
+        $markah = $_POST["markah"];
+        $total = 0;
+        $i = 0;
+
+        // While loop - kira jumlah semua markah
+        while ($i < count($markah)) {
+            $total += $markah[$i];
+            $i++;
+        }
+
+        // Do-while loop - kira purata markah
+        $kira = 0;
+        do {
+            $purata = $total / count($markah);
+            $kira++;
+        } while ($kira > 1);
+
+        echo "<h3>Jumlah Markah: $total</h3>";
+        echo "<h3>Purata Markah: " . number_format($purata, 2) . "</h3>";
+
+        // For loop - papar semua markah
+        echo "<h3>Senarai Markah:</h3>";
+        for ($j = 0; $j < count($markah); $j++) {
+            echo "Subjek " . ($j + 1) . ": " . $markah[$j] . "<br>";
+        }
+    }
+    ?>
+</body>
+</html>
